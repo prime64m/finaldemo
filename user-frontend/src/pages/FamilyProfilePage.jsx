@@ -5,12 +5,15 @@ import {
 } from 'lucide-react';
 import { STATES } from '../data/schemesData';
 import { DEMO_PROFILES } from '../data/demoProfiles';
+import GoogleAuthCard from '../components/GoogleAuthCard';
 
 export default function FamilyProfilePage({ 
   familyProfile, 
   setFamilyProfile, 
   setActivePage,
-  loadDemoProfile 
+  loadDemoProfile,
+  userAccount,
+  setUserAccount
 }) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingMemberId, setEditingMemberId] = useState(null);
@@ -42,6 +45,18 @@ export default function FamilyProfilePage({
       familyDetails: {
         ...prev.familyDetails,
         [name]: value
+      }
+    }));
+  };
+
+  // Google Login Auto Fill Handler
+  const handleGoogleLogin = (googleUser) => {
+    setFamilyProfile(prev => ({
+      ...prev,
+      familyDetails: {
+        ...prev.familyDetails,
+        familyName: `${googleUser.name.split(' ')[0]} Household`,
+        email: googleUser.email
       }
     }));
   };
@@ -222,6 +237,13 @@ export default function FamilyProfilePage({
         </div>
       </div>
 
+      {/* Google Authentication Section */}
+      <GoogleAuthCard 
+        userAccount={userAccount} 
+        setUserAccount={setUserAccount}
+        onGoogleLogin={handleGoogleLogin} 
+      />
+
       {/* Sync Status Banner */}
       {syncMessage && (
         <div className="bg-emerald-600 text-white px-5 py-3 rounded-xl font-semibold text-xs flex items-center gap-2 shadow-md animate-in fade-in">
@@ -359,31 +381,31 @@ export default function FamilyProfilePage({
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => handleOpenAddModal('Head of Family')}
-            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all"
+            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all cursor-pointer"
           >
             + Head (Self)
           </button>
           <button
             onClick={() => handleOpenAddModal('Spouse')}
-            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all"
+            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all cursor-pointer"
           >
             + Spouse
           </button>
           <button
             onClick={() => handleOpenAddModal('Son')}
-            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all"
+            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all cursor-pointer"
           >
             + Son (Student)
           </button>
           <button
             onClick={() => handleOpenAddModal('Daughter')}
-            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all"
+            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all cursor-pointer"
           >
             + Daughter (Student)
           </button>
           <button
             onClick={() => handleOpenAddModal('Parent')}
-            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all"
+            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all cursor-pointer"
           >
             + Senior Parent
           </button>
@@ -422,7 +444,7 @@ export default function FamilyProfilePage({
             </p>
             <button
               onClick={() => handleOpenAddModal()}
-              className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 transition-colors"
+              className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 transition-colors cursor-pointer"
             >
               <UserPlus className="w-4 h-4" />
               <span>Add First Member</span>

@@ -11,10 +11,33 @@ import AssistedHelpWidget from './components/AssistedHelpWidget';
 import { DEMO_PROFILES } from './data/demoProfiles';
 
 const LOCAL_STORAGE_KEY = 'schemesaathi_family_profile_v1';
+const USER_ACCOUNT_KEY = 'schemesaathi_user_account_v1';
 
 export default function App() {
   const [activePage, setActivePage] = useState('home');
   const [selectedScheme, setSelectedScheme] = useState(null);
+
+  // Google User Account state
+  const [userAccount, setUserAccount] = useState(() => {
+    try {
+      const saved = localStorage.getItem(USER_ACCOUNT_KEY);
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      if (userAccount) {
+        localStorage.setItem(USER_ACCOUNT_KEY, JSON.stringify(userAccount));
+      } else {
+        localStorage.removeItem(USER_ACCOUNT_KEY);
+      }
+    } catch (e) {
+      console.error("Error saving user account:", e);
+    }
+  }, [userAccount]);
 
   // Initialize profile from localStorage or default to Rural Farmer Household preset
   const [familyProfile, setFamilyProfile] = useState(() => {
@@ -72,6 +95,7 @@ export default function App() {
         setActivePage={handlePageChange} 
         familyProfile={familyProfile}
         loadDemoProfile={handleLoadDemoProfile}
+        userAccount={userAccount}
       />
 
       {/* Main Content Area */}
@@ -89,6 +113,8 @@ export default function App() {
             setFamilyProfile={setFamilyProfile} 
             setActivePage={handlePageChange}
             loadDemoProfile={handleLoadDemoProfile}
+            userAccount={userAccount}
+            setUserAccount={setUserAccount}
           />
         )}
 
