@@ -62,22 +62,6 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs">
-      {/* Top Govt Style Announcement Bar */}
-      <div className="bg-slate-900 text-slate-300 text-xs px-4 py-1.5 flex flex-wrap justify-between items-center border-b border-slate-800">
-        <div className="flex items-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span className="font-medium text-slate-200">{t('appName')} Civic-Tech Platform</span>
-          <span className="text-slate-500">|</span>
-          <span className="text-slate-400 hidden sm:inline">{t('tagline')}</span>
-        </div>
-        <div className="flex items-center gap-3 text-slate-400 text-xs">
-          <span className="bg-emerald-950 text-emerald-300 border border-emerald-800/60 px-2 py-0.5 rounded font-mono text-[11px]">
-            {userAccount ? 'Google Verified' : 'Google Auth Ready'}
-          </span>
-          <span>100% Free & Private</span>
-        </div>
-      </div>
-
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
