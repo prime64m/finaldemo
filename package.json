@@ -7,6 +7,8 @@
     "dev:user-frontend": "npm run dev --prefix user-frontend",
     "dev:admin-frontend": "npm run dev --prefix admin-frontend",
     "dev:user-backend": "npm run dev --prefix user-backend",
-    "dev:admin-backend": "npm run dev --prefix admin-backend"
+    "dev:admin-backend": "npm run dev --prefix admin-backend",
+    "build:user-frontend": "npm run build --prefix user-frontend",
+    "deploy:firebase": "npm run build:user-frontend && npx firebase-tools deploy --only hosting"
   }
 }
