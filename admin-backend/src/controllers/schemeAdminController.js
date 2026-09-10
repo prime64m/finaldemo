@@ -15,19 +15,23 @@ export const getSchemes = async (req, res) => {
 // @route   POST /api/admin/schemes
 export const createScheme = async (req, res) => {
   try {
-    const { title, category, ministry, description, benefits, eligibilityCriteria } = req.body;
-    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const { title, category, ministry, description, benefits, documentsRequired, applicationUrl, eligibilityCriteria } = req.body;
+    const baseSlug = title ? title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') : 'scheme';
+    const slug = `${baseSlug}-${Date.now()}`;
 
     const scheme = await Scheme.create({
       title,
       slug,
-      category,
-      ministry,
-      description,
+      category: category || 'General',
+      ministry: ministry || 'Ministry of Social Welfare',
+      description: description || 'Government welfare program',
       benefits: benefits || [],
+      documentsRequired: documentsRequired || ['Aadhaar Card'],
+      applicationUrl: applicationUrl || 'https://india.gov.in',
       eligibilityCriteria: eligibilityCriteria || {}
     });
 
+    console.log(`✅ [MongoDB Atlas] New Scheme Pushed by Admin: ${title}`);
     res.status(201).json({ success: true, data: scheme });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
