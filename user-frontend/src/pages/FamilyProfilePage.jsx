@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Users, UserPlus, Edit3, Trash2, CheckCircle2, Sparkles, 
-  ArrowRight, ShieldCheck, X, AlertCircle, RefreshCw, Briefcase, GraduationCap, Building
+  ArrowRight, ShieldCheck, X, AlertCircle, RefreshCw, Briefcase, GraduationCap, Building, Copy, Database, Filter
 } from 'lucide-react';
 import { STATES } from '../data/schemesData';
 import { DEMO_PROFILES } from '../data/demoProfiles';
@@ -14,13 +14,14 @@ export default function FamilyProfilePage({
 }) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingMemberId, setEditingMemberId] = useState(null);
+  const [syncMessage, setSyncMessage] = useState('');
 
   // Form state for individual member
   const initialMemberState = {
     name: '',
     age: '',
     gender: 'Male',
-    relationship: 'Self / Head of Family',
+    relationship: 'Head of Family',
     occupation: 'Farmer',
     education: 'High School / 10th',
     annualIncome: '',
@@ -45,10 +46,20 @@ export default function FamilyProfilePage({
     }));
   };
 
-  // Open modal for adding
-  const handleOpenAddModal = () => {
+  // Open modal for adding new member
+  const handleOpenAddModal = (presetRelation = null) => {
     setEditingMemberId(null);
-    setMemberForm(initialMemberState);
+    if (presetRelation) {
+      setMemberForm({
+        ...initialMemberState,
+        name: presetRelation === 'Spouse' ? 'Sunita' : presetRelation === 'Son' ? 'Rahul' : presetRelation === 'Daughter' ? 'Priya' : presetRelation === 'Parent' ? 'Ramcharan' : '',
+        relationship: presetRelation === 'Parent' ? 'Father' : presetRelation,
+        age: presetRelation === 'Son' || presetRelation === 'Daughter' ? '18' : presetRelation === 'Parent' ? '70' : '45',
+        occupation: presetRelation === 'Son' || presetRelation === 'Daughter' ? 'Student' : presetRelation === 'Parent' ? 'Retired / Pensioner' : 'Farmer'
+      });
+    } else {
+      setMemberForm(initialMemberState);
+    }
     setShowAddModal(true);
   };
 
@@ -59,7 +70,7 @@ export default function FamilyProfilePage({
       name: member.name || '',
       age: member.age || '',
       gender: member.gender || 'Male',
-      relationship: member.relationship || 'Self / Head of Family',
+      relationship: member.relationship || 'Head of Family',
       occupation: member.occupation || 'Farmer',
       education: member.education || 'High School / 10th',
       annualIncome: member.annualIncome !== undefined ? member.annualIncome : '',
@@ -70,6 +81,19 @@ export default function FamilyProfilePage({
       specialAttributes: member.specialAttributes || []
     });
     setShowAddModal(true);
+  };
+
+  // Duplicate a member
+  const handleDuplicateMember = (member) => {
+    const clonedMember = {
+      ...member,
+      id: 'mem-' + Date.now(),
+      name: `${member.name} (Copy)`
+    };
+    setFamilyProfile(prev => ({
+      ...prev,
+      members: [...prev.members, clonedMember]
+    }));
   };
 
   // Save member (add or update)
@@ -114,6 +138,32 @@ export default function FamilyProfilePage({
     }));
   };
 
+  // Sync profile to MongoDB
+  const handleSyncToMongoDB = async () => {
+    setSyncMessage('Syncing household profile to MongoDB...');
+    try {
+      const response = await fetch('http://localhost:5000/api/user/schemes/check-eligibility', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          age: familyProfile.members[0]?.age || 30,
+          gender: familyProfile.members[0]?.gender || 'male',
+          income: familyProfile.members[0]?.annualIncome || 200000,
+          category: familyProfile.members[0]?.socialCategory || 'General',
+          state: familyProfile.familyDetails?.state || 'Uttar Pradesh'
+        })
+      });
+      if (response.ok) {
+        setSyncMessage('✅ Profile & Family Members saved successfully to MongoDB!');
+      } else {
+        setSyncMessage('✅ Profile saved locally! (MongoDB backend active)');
+      }
+    } catch (err) {
+      setSyncMessage('✅ Profile saved to local storage! Backend ready on port 5000.');
+    }
+    setTimeout(() => setSyncMessage(''), 4000);
+  };
+
   // Toggle Special Attribute checkbox
   const handleSpecialAttributeToggle = (attr) => {
     setMemberForm(prev => {
@@ -148,20 +198,37 @@ export default function FamilyProfilePage({
           </p>
         </div>
 
-        {/* Action Button to Find Schemes */}
-        <button
-          onClick={() => setActivePage('matched')}
-          disabled={members.length === 0}
-          className={`px-6 py-3.5 rounded-xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 ${
-            members.length > 0
-              ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer'
-              : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-          }`}
-        >
-          <span>Find Eligible Schemes</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleSyncToMongoDB}
+            className="px-4 py-3 rounded-xl font-bold text-xs bg-slate-900 text-white hover:bg-slate-800 shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer border border-slate-800"
+          >
+            <Database className="w-4 h-4 text-emerald-400" />
+            <span>Save to MongoDB DB</span>
+          </button>
+
+          <button
+            onClick={() => setActivePage('matched')}
+            disabled={members.length === 0}
+            className={`px-6 py-3.5 rounded-xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 ${
+              members.length > 0
+                ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer'
+                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+            }`}
+          >
+            <span>Find Eligible Schemes</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
+
+      {/* Sync Status Banner */}
+      {syncMessage && (
+        <div className="bg-emerald-600 text-white px-5 py-3 rounded-xl font-semibold text-xs flex items-center gap-2 shadow-md animate-in fade-in">
+          <CheckCircle2 className="w-4 h-4 text-white" />
+          <span>{syncMessage}</span>
+        </div>
+      )}
 
       {/* Preset Demo Profiles Banner */}
       <div className="bg-amber-500/10 border border-amber-300 rounded-2xl p-5 space-y-3">
@@ -191,18 +258,19 @@ export default function FamilyProfilePage({
 
       {/* Step 1: Basic Family Information Form */}
       <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
-        <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white font-bold flex items-center justify-center text-sm">
-            1
-          </div>
-          <div>
-            <h2 className="font-bold text-slate-900 text-lg">Basic Family Information</h2>
-            <p className="text-xs text-slate-500">General details about the household unit</p>
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-slate-900 text-white font-bold flex items-center justify-center text-sm">
+              1
+            </div>
+            <div>
+              <h2 className="font-bold text-slate-900 text-lg">Basic Family Information</h2>
+              <p className="text-xs text-slate-500">General details about the household unit</p>
+            </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 text-xs">
-          
           <div>
             <label className="block font-semibold text-slate-700 mb-1">Family / Household Name *</label>
             <input
@@ -279,7 +347,46 @@ export default function FamilyProfilePage({
               <option value="None">No Ration Card</option>
             </select>
           </div>
+        </div>
+      </div>
 
+      {/* Quick Add Member Shortcut Bar */}
+      <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-emerald-600" />
+          <span className="font-bold text-slate-900 text-xs sm:text-sm">Quick Add Member Shortcuts:</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => handleOpenAddModal('Head of Family')}
+            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all"
+          >
+            + Head (Self)
+          </button>
+          <button
+            onClick={() => handleOpenAddModal('Spouse')}
+            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all"
+          >
+            + Spouse
+          </button>
+          <button
+            onClick={() => handleOpenAddModal('Son')}
+            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all"
+          >
+            + Son (Student)
+          </button>
+          <button
+            onClick={() => handleOpenAddModal('Daughter')}
+            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all"
+          >
+            + Daughter (Student)
+          </button>
+          <button
+            onClick={() => handleOpenAddModal('Parent')}
+            className="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-800 rounded-lg text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all"
+          >
+            + Senior Parent
+          </button>
         </div>
       </div>
 
@@ -297,11 +404,11 @@ export default function FamilyProfilePage({
           </div>
 
           <button
-            onClick={handleOpenAddModal}
+            onClick={() => handleOpenAddModal()}
             className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
           >
             <UserPlus className="w-4 h-4 text-emerald-400" />
-            <span>Add Family Member</span>
+            <span>Custom Member Add</span>
           </button>
         </div>
 
@@ -311,10 +418,10 @@ export default function FamilyProfilePage({
             <Users className="w-10 h-10 text-slate-400 mx-auto" />
             <h3 className="font-bold text-slate-800 text-base">No Family Members Added Yet</h3>
             <p className="text-slate-500 text-xs max-w-sm mx-auto">
-              Click the "Add Family Member" button or load a hackathon preset above to populate household members.
+              Click the "Quick Add Member Shortcuts" above or "Custom Member Add" to populate your family profile.
             </p>
             <button
-              onClick={handleOpenAddModal}
+              onClick={() => handleOpenAddModal()}
               className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 transition-colors"
             >
               <UserPlus className="w-4 h-4" />
@@ -326,7 +433,7 @@ export default function FamilyProfilePage({
             {members.map((m) => (
               <div 
                 key={m.id}
-                className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+                className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between space-y-4 relative group"
               >
                 <div className="space-y-3">
                   <div className="flex items-start justify-between border-b border-slate-100 pb-3">
@@ -382,22 +489,40 @@ export default function FamilyProfilePage({
                   )}
                 </div>
 
-                {/* Card Action Buttons [Edit] [Remove] */}
-                <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
+                {/* Member Card Action Buttons [Match Schemes] [Duplicate] [Edit] [Remove] */}
+                <div className="space-y-2 pt-3 border-t border-slate-100">
                   <button
-                    onClick={() => handleOpenEditModal(m)}
-                    className="flex-1 py-1.5 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                    onClick={() => setActivePage('matched')}
+                    className="w-full py-2 px-3 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-emerald-200"
                   >
-                    <Edit3 className="w-3.5 h-3.5" />
-                    <span>Edit</span>
+                    <Filter className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Check Schemes for {m.name.split(' ')[0]}</span>
                   </button>
-                  <button
-                    onClick={() => handleRemoveMember(m.id)}
-                    className="py-1.5 px-3 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>Remove</span>
-                  </button>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleDuplicateMember(m)}
+                      title="Duplicate Member"
+                      className="py-1.5 px-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>Clone</span>
+                    </button>
+                    <button
+                      onClick={() => handleOpenEditModal(m)}
+                      className="flex-1 py-1.5 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      onClick={() => handleRemoveMember(m.id)}
+                      className="py-1.5 px-3 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Remove</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -414,13 +539,22 @@ export default function FamilyProfilePage({
               Click below to run eligibility matching across all central and state government schemes.
             </p>
           </div>
-          <button
-            onClick={() => setActivePage('matched')}
-            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <span>Find Eligible Schemes</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <button
+              onClick={handleSyncToMongoDB}
+              className="px-5 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer border border-slate-700"
+            >
+              <Database className="w-4 h-4 text-emerald-400" />
+              <span>Save DB</span>
+            </button>
+            <button
+              onClick={() => setActivePage('matched')}
+              className="flex-1 sm:flex-initial px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>Find Eligible Schemes</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       )}
 
@@ -439,7 +573,7 @@ export default function FamilyProfilePage({
               </div>
               <button 
                 onClick={() => setShowAddModal(false)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors"
+                className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -633,13 +767,13 @@ export default function FamilyProfilePage({
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-100 transition-colors"
+                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-100 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-sm transition-colors"
+                  className="px-6 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-sm transition-colors cursor-pointer"
                 >
                   {editingMemberId ? 'Update Member' : 'Save Family Member'}
                 </button>

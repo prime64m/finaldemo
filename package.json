@@ -1,26 +1,12 @@
 {
-  "name": "untitled-folder",
+  "name": "schemesaathi-monorepo",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "SchemeSaathi Monorepo: 2 Frontends (Admin, User) & 2 Backends (Admin, User) with MongoDB",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "oxlint",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
-    "lucide-react": "^1.43.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "tailwindcss": "^4.3.3"
-  },
-  "devDependencies": {
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "@vitejs/plugin-react": "^6.1.0",
-    "oxlint": "^1.79.0",
-    "vite": "^8.2.2"
+    "dev:user-frontend": "npm run dev --prefix user-frontend",
+    "dev:admin-frontend": "npm run dev --prefix admin-frontend",
+    "dev:user-backend": "npm run dev --prefix user-backend",
+    "dev:admin-backend": "npm run dev --prefix admin-backend"
   }
 }
