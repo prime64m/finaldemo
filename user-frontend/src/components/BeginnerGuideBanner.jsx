@@ -71,7 +71,7 @@ export default function BeginnerGuideBanner({ setActivePage }) {
           </div>
           <h3 className="font-bold text-white text-base">See Eligible Schemes</h3>
           <p className="text-slate-300 text-xs leading-relaxed">
-            Our AI engine instantly matches rules and shows green "YOU ARE ELIGIBLE" badges.
+            Our eligibility engine instantly matches rules and shows green "YOU ARE ELIGIBLE" badges.
           </p>
           <button
             onClick={() => setActivePage('matched')}

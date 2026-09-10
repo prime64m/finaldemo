@@ -84,7 +84,7 @@ export default function EligibleSchemesPage({
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Live Profile vs Scheme AI Matching Engine</span>
+              <span>Live Profile vs Scheme Matching Engine</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
               {familyDetails.familyName || 'Family Profile'} Scheme Dashboard
@@ -95,13 +95,13 @@ export default function EligibleSchemesPage({
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            {/* Groq AI Document Verification Trigger Button */}
+            {/* Document Verification Trigger Button */}
             <button
               onClick={() => setShowGroqModal(true)}
               className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer border border-indigo-400"
             >
               <Cpu className="w-4 h-4 text-amber-300" />
-              <span>Scan Document with Groq AI</span>
+              <span>Scan & Verify Document</span>
             </button>
 
             {/* Member Filter Selector */}

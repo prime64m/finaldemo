@@ -42,7 +42,7 @@ export default function GroqDocumentVerifierModal({ familyProfile, onClose }) {
             messages: [
               {
                 role: 'system',
-                content: 'You are an official AI document verification engine for government schemes in India. Compare document text against profile records and report errors.'
+                content: 'You are an official document verification engine for government schemes in India. Compare document text against profile records and report errors.'
               },
               {
                 role: 'user',
@@ -62,7 +62,7 @@ Document Submitted (${documentType}): Name="${docName}", Income=${docIncome}, St
       console.log('Groq API call completed with local engine verification');
     }
 
-    // High performance rule & AI analysis engine evaluation
+    // High performance rule-based analysis engine evaluation
     setTimeout(() => {
       const mismatches = [];
 
@@ -145,9 +145,9 @@ Document Submitted (${documentType}): Name="${docName}", Income=${docIncome}, St
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-extrabold text-lg text-white">Groq AI Document Verification</h3>
+                <h3 className="font-extrabold text-lg text-white">Smart Document Verification</h3>
                 <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500 text-slate-950 px-2 py-0.5 rounded">
-                  Groq Llama-3.3 Active
+                  Verification Active
                 </span>
               </div>
               <p className="text-xs text-slate-400">Scan & compare document values against user profile to detect errors</p>
@@ -241,12 +241,12 @@ Document Submitted (${documentType}): Name="${docName}", Income=${docIncome}, St
               {analyzing ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin text-emerald-400" />
-                  <span>Groq AI Llama-3.3 is verifying document...</span>
+                  <span>Verifying document...</span>
                 </>
               ) : (
                 <>
                   <Sparkles className="w-4 h-4 text-emerald-400" />
-                  <span>Run Groq AI Error & Verification Check</span>
+                  <span>Run Error & Verification Check</span>
                 </>
               )}
             </button>
@@ -282,7 +282,7 @@ Document Submitted (${documentType}): Name="${docName}", Income=${docIncome}, St
 
                 <div className="text-right">
                   <span className="text-2xl font-black">{analysisResult.matchScore}%</span>
-                  <span className="block text-[10px] uppercase font-bold opacity-75">AI Match</span>
+                  <span className="block text-[10px] uppercase font-bold opacity-75">Match Score</span>
                 </div>
               </div>
 
@@ -291,7 +291,7 @@ Document Submitted (${documentType}): Name="${docName}", Income=${docIncome}, St
                 <div className="space-y-3">
                   <h5 className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
                     <AlertTriangle className="w-4 h-4 text-amber-600" />
-                    <span>Discrepancies & AI Fix Recommendations:</span>
+                    <span>Discrepancies & Fix Recommendations:</span>
                   </h5>
 
                   {analysisResult.mismatches.map((m, idx) => (
@@ -316,7 +316,7 @@ Document Submitted (${documentType}): Name="${docName}", Income=${docIncome}, St
                       </div>
 
                       <div className="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl text-emerald-900 text-[11px]">
-                        <strong>💡 AI Recommendation:</strong> {m.fixAdvice}
+                        <strong>💡 Recommendation:</strong> {m.fixAdvice}
                       </div>
                     </div>
                   ))}

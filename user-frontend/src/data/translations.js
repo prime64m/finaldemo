@@ -45,9 +45,9 @@ export const TRANSLATIONS = {
     kn: "ನಿಮ್ಮ ಕುಟುಂಬಕ್ಕೆ ಅರ್ಹವಾದ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳನ್ನು ಕಂಡುಕೊಳ್ಳಿ"
   },
   heroSubtitle: {
-    en: "AI-powered eligibility engine matching central & state welfare programs across India.",
-    hi: "भारत भर में केंद्रीय और राज्य कल्याणकारी योजनाओं को मिलाने वाला AI-संचालित इंजन।",
-    kn: "ಭಾರತದಾದ್ಯಂತ ಕೇಂದ್ರ ಮತ್ತು ರಾಜ್ಯ ಕಲ್ಯಾಣ ಕಾರ್ಯಕ್ರಮಗಳನ್ನು ಹೊಂದಿಸುವ AI-ಚಾಲಿತ ಇಂಜಿನ್."
+    en: "Smart eligibility engine matching central & state welfare programs across India.",
+    hi: "भारत भर में केंद्रीय और राज्य कल्याणकारी योजनाओं को मिलाने वाला स्मार्ट इंजन।",
+    kn: "ಭಾರತದಾದ್ಯಂತ ಕೇಂದ್ರ ಮತ್ತು ರಾಜ್ಯ ಕಲ್ಯಾಣ ಕಾರ್ಯಕ್ರಮಗಳನ್ನು ಹೊಂದಿಸುವ ಸ್ಮಾರ್ಟ್ ಇಂಜಿನ್."
   },
   findSchemesBtn: {
     en: "Find Eligible Schemes",
@@ -82,16 +82,16 @@ export const TRANSLATIONS = {
     kn: "ತ್ವರಿತ ಸದಸ್ಯ ಸೇರ್ಪಡೆ:"
   },
 
-  // Matched Schemes & Groq AI
+  // Matched Schemes & Document Verification
   liveMatchingBadge: {
-    en: "Live Profile vs Scheme AI Matching Engine",
-    hi: "लाइव प्रोफ़ाइल और योजना एआई मिलान इंजन",
-    kn: "ಲೈವ್ ಪ್ರೊಫೈಲ್ ಮತ್ತು ಯೋಜನೆ ಎಐ ಮ್ಯಾಚಿಂಗ್ ಇಂಜಿನ್"
+    en: "Live Profile vs Scheme Matching Engine",
+    hi: "लाइव प्रोफ़ाइल और योजना मिलान इंजन",
+    kn: "ಲೈವ್ ಪ್ರೊಫೈಲ್ ಮತ್ತು ಯೋಜನೆ ಮ್ಯಾಚಿಂಗ್ ಇಂಜಿನ್"
   },
   scanGroqAI: {
-    en: "Scan Document with Groq AI",
-    hi: "Groq AI से दस्तावेज़ स्कैन करें",
-    kn: "Groq AI ನೊಂದಿಗೆ ದಾಖಲೆ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ"
+    en: "Scan & Verify Document",
+    hi: "दस्तावेज़ स्कैन और सत्यापित करें",
+    kn: "ದಾಖಲೆ ಸ್ಕ್ಯಾನ್ ಮತ್ತು ಪರಿಶೀಲಿಸಿ"
   },
   youAreEligible: {
     en: "YOU ARE ELIGIBLE",

@@ -102,7 +102,7 @@ export default function AboutPage() {
           <div className="space-y-2 bg-slate-800 p-5 rounded-2xl border border-slate-700">
             <h4 className="font-bold text-emerald-400 text-sm">Transparent Logic</h4>
             <p className="text-slate-300 leading-relaxed">
-              No black-box AI or hidden scoring. We use clear, deterministic rule-based conditions that citizens can trust and understand.
+              No hidden scoring or opaque logic. We use clear, deterministic rule-based conditions that citizens can trust and understand.
             </p>
           </div>
 

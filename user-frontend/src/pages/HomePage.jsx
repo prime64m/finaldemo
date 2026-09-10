@@ -127,7 +127,7 @@ export default function HomePage({ setActivePage, loadDemoProfile }) {
           <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 flex items-center justify-center font-bold">
             <ShieldCheck className="w-6 h-6" />
           </div>
-          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-lg">Rule-Based AI Engine</h3>
+          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-lg">Smart Eligibility Engine</h3>
           <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
             Transparently explains why a family member qualifies or fails specific scheme criteria (income, age, caste, state).
           </p>
