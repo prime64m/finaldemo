@@ -15,49 +15,60 @@ export default function ExploreSchemesPage({ onSelectScheme }) {
   const [allSchemes, setAllSchemes] = useState(SCHEMES);
   const [mongoSyncedCount, setMongoSyncedCount] = useState(0);
 
-  // Fetch live schemes from MongoDB Atlas user API
+  // Fetch live schemes from MongoDB Atlas API / Admin server
   useEffect(() => {
-    fetch('http://localhost:5000/api/user/schemes')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.data && data.data.length > 0) {
-          const transformedMongoSchemes = data.data.map(item => ({
-            id: item._id || `mongo-${Date.now()}`,
-            name: item.title,
-            department: item.ministry || 'Ministry of Social Welfare',
-            category: item.category || 'General',
-            isCentral: true,
-            shortDescription: item.description || 'Government welfare scheme pushed via Admin portal.',
-            mainBenefits: Array.isArray(item.benefits) ? item.benefits.join(', ') : (item.benefits || 'Financial & material assistance'),
-            officialUrl: item.applicationUrl || 'https://india.gov.in',
-            lastUpdated: new Date(item.updatedAt || Date.now()).toISOString().split('T')[0],
-            isDemoData: false,
-            isMongoAtlas: true,
-            requiredDocuments: item.documentsRequired || ['Aadhaar Card'],
-            applicationProcess: `Apply directly online via ${item.applicationUrl || 'official portal'}.`,
-            eligibilitySummary: `Eligible for applicants with annual household income below ₹${(item.eligibilityCriteria?.maxIncomeLimit || 250000).toLocaleString('en-IN')}.`,
-            eligibilityRules: {
-              minAge: item.eligibilityCriteria?.minAge || 18,
-              maxAge: item.eligibilityCriteria?.maxAge || 75,
-              genderRequirement: 'ANY',
-              occupations: ['ANY'],
-              maxAnnualIncome: item.eligibilityCriteria?.maxIncomeLimit || 250000,
-              incomeBracketLimit: ['Non-Taxpayer', 'Below ₹2.5L'],
-              socialCategories: ['ANY'],
-              landOwnership: ['ANY'],
-              disabilityRequirement: 'ANY',
-              states: ['All India']
-            }
-          }));
+    const loadSchemes = async () => {
+      let data = null;
+      try {
+        const res = await fetch('http://localhost:5000/api/user/schemes');
+        data = await res.json();
+      } catch (e) {}
 
-          setMongoSyncedCount(transformedMongoSchemes.length);
-          // Combine live MongoDB schemes with default catalog (filtering duplicates by name)
-          const existingNames = new Set(transformedMongoSchemes.map(s => s.name.toLowerCase()));
-          const remainingDefault = SCHEMES.filter(s => !existingNames.has(s.name.toLowerCase()));
-          setAllSchemes([...transformedMongoSchemes, ...remainingDefault]);
-        }
-      })
-      .catch(err => console.log('Live MongoDB fetch note:', err));
+      if (!data || !data.success || !data.data || data.data.length === 0) {
+        try {
+          const adminRes = await fetch('http://localhost:5001/api/admin/schemes');
+          data = await adminRes.json();
+        } catch (e) {}
+      }
+
+      if (data && data.success && data.data && data.data.length > 0) {
+        const transformedMongoSchemes = data.data.map(item => ({
+          id: item._id || `mongo-${Date.now()}`,
+          name: item.title,
+          department: item.ministry || 'Ministry of Social Welfare',
+          category: item.category || 'General',
+          isCentral: true,
+          shortDescription: item.description || 'Government welfare scheme pushed via Admin portal.',
+          mainBenefits: Array.isArray(item.benefits) ? item.benefits.join(', ') : (item.benefits || 'Financial & material assistance'),
+          officialUrl: item.applicationUrl || 'https://india.gov.in',
+          lastUpdated: new Date(item.updatedAt || Date.now()).toISOString().split('T')[0],
+          isDemoData: false,
+          isMongoAtlas: true,
+          requiredDocuments: item.documentsRequired || ['Aadhaar Card'],
+          applicationProcess: `Apply directly online via ${item.applicationUrl || 'official portal'}.`,
+          eligibilitySummary: `Eligible for applicants with annual household income below ₹${(item.eligibilityCriteria?.maxIncomeLimit || 250000).toLocaleString('en-IN')}.`,
+          eligibilityRules: {
+            minAge: item.eligibilityCriteria?.minAge || 18,
+            maxAge: item.eligibilityCriteria?.maxAge || 75,
+            genderRequirement: 'ANY',
+            occupations: ['ANY'],
+            maxAnnualIncome: item.eligibilityCriteria?.maxIncomeLimit || 250000,
+            incomeBracketLimit: ['Non-Taxpayer', 'Below ₹2.5L'],
+            socialCategories: ['ANY'],
+            landOwnership: ['ANY'],
+            disabilityRequirement: 'ANY',
+            states: ['All India']
+          }
+        }));
+
+        setMongoSyncedCount(transformedMongoSchemes.length);
+        const existingNames = new Set(transformedMongoSchemes.map(s => s.name.toLowerCase()));
+        const remainingDefault = SCHEMES.filter(s => !existingNames.has(s.name.toLowerCase()));
+        setAllSchemes([...transformedMongoSchemes, ...remainingDefault]);
+      }
+    };
+
+    loadSchemes();
   }, []);
 
   // Filter logic
