@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1e293b;
+    background-color: #f8fafc;
+  }
+}
+
+/* Civic Theme Custom Utilities */
+.bg-gov-navy {
+  background-color: #1b365d;
+}
+
+.text-gov-navy {
+  color: #1b365d;
+}
+
+.border-gov-navy {
+  border-color: #1b365d;
+}
+
+.bg-gov-green {
+  background-color: #00875a;
+}
+
+.text-gov-green {
+  color: #00875a;
+}
+
+.bg-gov-saffron {
+  background-color: #e06d10;
+}
+
+.text-gov-saffron {
+  color: #e06d10;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
