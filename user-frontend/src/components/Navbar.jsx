@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Landmark, Users, Search, Award, Info, Sparkles, ChevronDown, CheckCircle2, Globe, ShieldCheck, User, LogOut } from 'lucide-react';
+import { Landmark, Users, Search, Award, Info, Sparkles, ChevronDown, CheckCircle2, Globe, ShieldCheck, User, LogOut, Sun, Moon } from 'lucide-react';
 import { DEMO_PROFILES } from '../data/demoProfiles';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import { signInWithGoogle, logoutFirebase } from '../config/firebase';
 
 export default function Navbar({ activePage, setActivePage, familyProfile, loadDemoProfile, userAccount, setUserAccount }) {
@@ -9,6 +10,7 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
   const [showLangDropdown, setShowLangDropdown] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
   const { lang, changeLanguage, t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   
   const memberCount = familyProfile?.members?.length || 0;
 
@@ -61,7 +63,7 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
   const currentLangObj = languagesList.find(l => l.code === lang) || languagesList[0];
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs">
+    <header className="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs transition-colors duration-300">
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -76,12 +78,12 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-xl tracking-tight text-slate-900 font-display">{t('appName')}</span>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200">
+                <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-slate-100 font-display">{t('appName')}</span>
+                <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800 text-amber-800 border border-amber-200">
                   India
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 -mt-0.5">{t('tagline')}</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 -mt-0.5">{t('tagline')}</p>
             </div>
           </button>
 
@@ -91,8 +93,8 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
               onClick={() => setActivePage('home')}
               className={`px-3.5 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
                 activePage === 'home'
-                  ? 'bg-slate-100 text-emerald-700 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-slate-100 dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 font-semibold'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               {t('home')}
@@ -102,14 +104,14 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
               onClick={() => setActivePage('profile')}
               className={`px-3.5 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
                 activePage === 'profile'
-                  ? 'bg-slate-100 text-emerald-700 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-slate-100 dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 font-semibold'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               <Users className="w-4 h-4" />
               {t('familyProfile')}
               {memberCount > 0 && (
-                <span className="ml-1 bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-bold">
+                <span className="ml-1 bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-300 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-bold">
                   {memberCount}
                 </span>
               )}
@@ -119,8 +121,8 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
               onClick={() => setActivePage('explore')}
               className={`px-3.5 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
                 activePage === 'explore'
-                  ? 'bg-slate-100 text-emerald-700 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-slate-100 dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 font-semibold'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               <Search className="w-4 h-4" />
@@ -131,11 +133,11 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
               onClick={() => setActivePage('matched')}
               className={`px-3.5 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
                 activePage === 'matched'
-                  ? 'bg-slate-100 text-emerald-700 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-slate-100 dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 font-semibold'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
-              <Award className="w-4 h-4 text-emerald-600" />
+              <Award className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               {t('matchedSchemes')}
             </button>
 
@@ -143,8 +145,8 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
               onClick={() => setActivePage('about')}
               className={`px-3.5 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
                 activePage === 'about'
-                  ? 'bg-slate-100 text-emerald-700 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-slate-100 dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 font-semibold'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               <Info className="w-4 h-4" />
@@ -153,6 +155,20 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
           </nav>
 
           <div className="flex items-center gap-2">
+            {/* Dark / Light Mode Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 transition-all cursor-pointer shadow-xs"
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-4 h-4 text-amber-400" />
+              ) : (
+                <Moon className="w-4 h-4 text-indigo-600" />
+              )}
+            </button>
+
             {/* Language Selector Dropdown */}
             <div className="relative">
               <button
@@ -160,16 +176,16 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
                   setShowLangDropdown(!showLangDropdown);
                   setShowAuthDropdown(false);
                 }}
-                className="bg-emerald-50 text-emerald-900 border border-emerald-300 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer hover:bg-emerald-100"
+                className="bg-emerald-50 dark:bg-slate-800 text-emerald-900 dark:text-emerald-300 border border-emerald-300 dark:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer hover:bg-emerald-100 dark:hover:bg-slate-700"
               >
-                <Globe className="w-4 h-4 text-emerald-600" />
+                <Globe className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span>{currentLangObj.flag} {currentLangObj.name}</span>
-                <ChevronDown className="w-3.5 h-3.5 text-emerald-700" />
+                <ChevronDown className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
               </button>
 
               {showLangDropdown && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-200 p-1.5 z-50 animate-in fade-in zoom-in-95">
-                  <div className="px-3 py-1.5 border-b border-slate-100 mb-1">
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 p-1.5 z-50 animate-in fade-in zoom-in-95">
+                  <div className="px-3 py-1.5 border-b border-slate-100 dark:border-slate-800 mb-1">
                     <p className="text-[11px] font-bold text-slate-400 uppercase">Select Language</p>
                   </div>
                   {languagesList.map((item) => (
@@ -180,14 +196,14 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
                         setShowLangDropdown(false);
                       }}
                       className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors cursor-pointer ${
-                        lang === item.code ? 'bg-emerald-100 text-emerald-900 font-bold' : 'text-slate-700 hover:bg-slate-100'
+                        lang === item.code ? 'bg-emerald-100 dark:bg-slate-800 text-emerald-900 dark:text-emerald-300 font-bold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                       }`}
                     >
                       <span className="flex items-center gap-2">
                         <span>{item.flag}</span>
                         <span>{item.label}</span>
                       </span>
-                      {lang === item.code && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                      {lang === item.code && <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />}
                     </button>
                   ))}
                 </div>
@@ -289,28 +305,28 @@ export default function Navbar({ activePage, setActivePage, familyProfile, loadD
       </div>
 
       {/* Mobile Tab Navigation */}
-      <div className="md:hidden border-t border-slate-200 bg-slate-50 px-2 py-1.5 flex justify-around text-xs">
+      <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-2 py-1.5 flex justify-around text-xs">
         <button
           onClick={() => setActivePage('home')}
-          className={`px-2 py-1 rounded ${activePage === 'home' ? 'font-bold text-emerald-700' : 'text-slate-600'}`}
+          className={`px-2 py-1 rounded ${activePage === 'home' ? 'font-bold text-emerald-700 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'}`}
         >
           {t('home')}
         </button>
         <button
           onClick={() => setActivePage('profile')}
-          className={`px-2 py-1 rounded flex items-center gap-1 ${activePage === 'profile' ? 'font-bold text-emerald-700' : 'text-slate-600'}`}
+          className={`px-2 py-1 rounded flex items-center gap-1 ${activePage === 'profile' ? 'font-bold text-emerald-700 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'}`}
         >
           {t('familyProfile')} ({memberCount})
         </button>
         <button
           onClick={() => setActivePage('explore')}
-          className={`px-2 py-1 rounded ${activePage === 'explore' ? 'font-bold text-emerald-700' : 'text-slate-600'}`}
+          className={`px-2 py-1 rounded ${activePage === 'explore' ? 'font-bold text-emerald-700 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'}`}
         >
           {t('exploreSchemes')}
         </button>
         <button
           onClick={() => setActivePage('matched')}
-          className={`px-2 py-1 rounded ${activePage === 'matched' ? 'font-bold text-emerald-700' : 'text-slate-600'}`}
+          className={`px-2 py-1 rounded ${activePage === 'matched' ? 'font-bold text-emerald-700 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'}`}
         >
           {t('matchedSchemes')}
         </button>
