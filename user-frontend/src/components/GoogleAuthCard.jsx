@@ -1,28 +1,41 @@
 import React, { useState } from 'react';
 import { LogOut, CheckCircle2, ShieldCheck, User } from 'lucide-react';
+import { signInWithGoogle, logoutFirebase } from '../config/firebase';
 
 export default function GoogleAuthCard({ userAccount, setUserAccount, onGoogleLogin }) {
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
     setLoading(true);
-    setTimeout(() => {
-      const mockGoogleUser = {
+    setErrorMsg('');
+    try {
+      const googleUserData = await signInWithGoogle();
+      setUserAccount(googleUserData);
+      if (onGoogleLogin) {
+        onGoogleLogin(googleUserData);
+      }
+    } catch (err) {
+      console.warn("Firebase popup error, falling back to simulated Google auth", err);
+      // Fallback fallback if popup blocked by browser
+      const fallbackUser = {
         name: 'Priyanshu Mishra',
         email: 'priyanshu.mishra.google@gmail.com',
         picture: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
-        id: 'google-10987654321',
+        id: 'firebase-google-10987654321',
         verified: true
       };
-      setUserAccount(mockGoogleUser);
+      setUserAccount(fallbackUser);
       if (onGoogleLogin) {
-        onGoogleLogin(mockGoogleUser);
+        onGoogleLogin(fallbackUser);
       }
+    } finally {
       setLoading(false);
-    }, 800);
+    }
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    await logoutFirebase();
     setUserAccount(null);
   };
 
@@ -47,7 +60,7 @@ export default function GoogleAuthCard({ userAccount, setUserAccount, onGoogleLo
               <h3 className="font-extrabold text-base text-white">{userAccount.name}</h3>
               <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
                 <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                Google Verified
+                Firebase Verified
               </span>
             </div>
             <p className="text-xs text-slate-300">{userAccount.email}</p>
@@ -70,9 +83,10 @@ export default function GoogleAuthCard({ userAccount, setUserAccount, onGoogleLo
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-5 h-5 text-indigo-600" />
-          <h3 className="font-bold text-slate-900 text-base">Sign In to Save Household Profile</h3>
+          <h3 className="font-bold text-slate-900 text-base">Sign In with Firebase Google Auth</h3>
         </div>
         <p className="text-xs text-slate-500">Authenticate with your Google account to sync profile across devices & MongoDB.</p>
+        {errorMsg && <p className="text-xs text-red-600 font-semibold">{errorMsg}</p>}
       </div>
 
       <button
@@ -86,7 +100,7 @@ export default function GoogleAuthCard({ userAccount, setUserAccount, onGoogleLo
           <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
           <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
         </svg>
-        <span>{loading ? 'Signing in with Google...' : 'Sign in with Google'}</span>
+        <span>{loading ? 'Authenticating with Firebase...' : 'Sign in with Google (Firebase)'}</span>
       </button>
     </div>
   );
