@@ -153,32 +153,6 @@ export default function FamilyProfilePage({
     }));
   };
 
-  // Sync profile to MongoDB
-  const handleSyncToMongoDB = async () => {
-    setSyncMessage('Syncing household profile to MongoDB...');
-    try {
-      const response = await fetch('http://localhost:5000/api/user/schemes/check-eligibility', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          age: familyProfile.members[0]?.age || 30,
-          gender: familyProfile.members[0]?.gender || 'male',
-          income: familyProfile.members[0]?.annualIncome || 200000,
-          category: familyProfile.members[0]?.socialCategory || 'General',
-          state: familyProfile.familyDetails?.state || 'Uttar Pradesh'
-        })
-      });
-      if (response.ok) {
-        setSyncMessage('✅ Profile & Family Members saved successfully to MongoDB!');
-      } else {
-        setSyncMessage('✅ Profile saved locally! (MongoDB backend active)');
-      }
-    } catch (err) {
-      setSyncMessage('✅ Profile saved to local storage! Backend ready on port 5000.');
-    }
-    setTimeout(() => setSyncMessage(''), 4000);
-  };
-
   // Toggle Special Attribute checkbox
   const handleSpecialAttributeToggle = (attr) => {
     setMemberForm(prev => {
@@ -214,14 +188,6 @@ export default function FamilyProfilePage({
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={handleSyncToMongoDB}
-            className="px-4 py-3 rounded-xl font-bold text-xs bg-slate-900 text-white hover:bg-slate-800 shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer border border-slate-800"
-          >
-            <Database className="w-4 h-4 text-emerald-400" />
-            <span>Save to MongoDB DB</span>
-          </button>
-
           <button
             onClick={() => setActivePage('matched')}
             disabled={members.length === 0}
@@ -562,13 +528,6 @@ export default function FamilyProfilePage({
             </p>
           </div>
           <div className="flex items-center gap-3 w-full sm:w-auto">
-            <button
-              onClick={handleSyncToMongoDB}
-              className="px-5 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer border border-slate-700"
-            >
-              <Database className="w-4 h-4 text-emerald-400" />
-              <span>Save DB</span>
-            </button>
             <button
               onClick={() => setActivePage('matched')}
               className="flex-1 sm:flex-initial px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"

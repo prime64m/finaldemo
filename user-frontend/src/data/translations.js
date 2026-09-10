@@ -76,11 +76,6 @@ export const TRANSLATIONS = {
     hi: "परिवार का सदस्य जोड़ें",
     kn: "ಕುಟುಂಬದ ಸದಸ್ಯರನ್ನು ಸೇರಿಸಿ"
   },
-  saveToMongoDB: {
-    en: "Save to MongoDB DB",
-    hi: "MongoDB डेटाबेस में सहेजें",
-    kn: "MongoDB ಡೇಟಾಬೇಸ್‌ಗೆ ಉಳಿಸಿ"
-  },
   quickShortcuts: {
     en: "Quick Add Shortcuts:",
     hi: "त्वरित सदस्य जोड़ें:",

@@ -1,10 +1,9 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
 import schemeRoutes from './routes/schemeRoutes.js';
-
-dotenv.config();
+import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 
@@ -18,6 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/user/schemes', schemeRoutes);
+app.use('/api/user', userRoutes);
 
 const PORT = process.env.PORT || 5000;
 

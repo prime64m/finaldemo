@@ -43,7 +43,7 @@ export const SCHEMES = [
     isCentral: true,
     shortDescription: "Direct income support of ₹6,000 per year paid in three equal installments of ₹2,000 to eligible farmer families.",
     mainBenefits: "₹6,000/year directly transferred to Aadhaar-linked bank account in 3 installments.",
-    officialUrl: "https://pmkisan.gov.in/",
+    officialUrl: "https://pmkisan.gov.in/RegistrationFormupdated.aspx",
     lastUpdated: "2026-01-15",
     isDemoData: true,
     requiredDocuments: [

@@ -77,7 +77,7 @@ export default function Footer({ setActivePage }) {
                 </a>
               </li>
               <li>
-                <a href="https://pmkisan.gov.in/" target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-emerald-400 transition-colors">
+                <a href="https://pmkisan.gov.in/RegistrationFormupdated.aspx" target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-emerald-400 transition-colors">
                   <span>PM-KISAN Portal</span>
                   <ExternalLink className="w-3 h-3 text-slate-500" />
                 </a>
