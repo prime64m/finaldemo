@@ -1,6 +1,15 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  signInWithRedirect,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut, 
+  onAuthStateChanged 
+} from "firebase/auth";
 
 // Firebase configuration provided
 const firebaseConfig = {
@@ -39,11 +48,39 @@ export const signInWithGoogle = async () => {
       uid: user.uid,
       name: user.displayName || "Google User",
       email: user.email,
+      picture: user.photoURL || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
+      verified: true
+    };
+  } catch (error) {
+    console.error("Firebase Google Auth Popup Error:", error);
+    // Try redirect if popup is blocked
+    try {
+      await signInWithRedirect(auth, googleProvider);
+    } catch (err2) {
+      console.error("Firebase Redirect Error:", err2);
+    }
+    throw error;
+  }
+};
+
+export const signInWithEmail = async (email, password, name) => {
+  try {
+    let result;
+    try {
+      result = await signInWithEmailAndPassword(auth, email, password);
+    } catch (e) {
+      result = await createUserWithEmailAndPassword(auth, email, password);
+    }
+    const user = result.user;
+    return {
+      uid: user.uid,
+      name: name || user.displayName || email.split('@')[0],
+      email: user.email,
       picture: user.photoURL,
       verified: true
     };
   } catch (error) {
-    console.error("Firebase Google Auth Error:", error);
+    console.error("Firebase Email Auth Error:", error);
     throw error;
   }
 };
