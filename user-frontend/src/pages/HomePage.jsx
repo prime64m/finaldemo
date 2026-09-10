@@ -113,66 +113,66 @@ export default function HomePage({ setActivePage, loadDemoProfile }) {
 
       {/* Feature Highlights Grid */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3">
-          <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3 transition-colors">
+          <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold">
             <Users className="w-6 h-6" />
           </div>
-          <h3 className="font-bold text-slate-900 text-lg">Single Household Profile</h3>
-          <p className="text-slate-600 text-xs leading-relaxed">
+          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-lg">Single Household Profile</h3>
+          <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
             Add your parents, spouse, and children under one family account to evaluate eligibility for everyone together.
           </p>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3">
-          <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3 transition-colors">
+          <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 flex items-center justify-center font-bold">
             <ShieldCheck className="w-6 h-6" />
           </div>
-          <h3 className="font-bold text-slate-900 text-lg">Rule-Based AI Engine</h3>
-          <p className="text-slate-600 text-xs leading-relaxed">
+          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-lg">Rule-Based AI Engine</h3>
+          <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
             Transparently explains why a family member qualifies or fails specific scheme criteria (income, age, caste, state).
           </p>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3">
-          <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3 transition-colors">
+          <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-400 flex items-center justify-center font-bold">
             <CheckCircle2 className="w-6 h-6" />
           </div>
-          <h3 className="font-bold text-slate-900 text-lg">Direct Official Portal Links</h3>
-          <p className="text-slate-600 text-xs leading-relaxed">
-            Access verified government URLs, document checklists, and application guidelines without middleman confusion.
+          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-lg">Direct Official Portal Links</h3>
+          <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+            No middleman fees. Direct links to myscheme.gov.in, pmkisan.gov.in, and official state portals.
           </p>
         </div>
       </section>
 
-      {/* Category Grid */}
+      {/* Categories Grid */}
       <section className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex justify-between items-end">
           <div>
-            <h2 className="text-2xl font-extrabold text-slate-900 font-display">Browse Schemes by Category</h2>
-            <p className="text-xs text-slate-500 mt-1">Explore specialized welfare programs across major sectors</p>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 font-display">Browse Schemes by Category</h2>
+            <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">Discover government welfare across all sectors</p>
           </div>
           <button
             onClick={() => setActivePage('explore')}
-            className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 cursor-pointer"
+            className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-bold text-sm flex items-center gap-1 cursor-pointer"
           >
-            <span>View All Categories</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <span>View All</span>
+            <ArrowRight className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-          {CATEGORIES.slice(0, 10).map((cat) => {
-            const Icon = categoryIcons[cat] || Landmark;
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          {CATEGORIES.filter(c => c !== "All Categories").map((cat) => {
+            const IconComponent = categoryIcons[cat] || FileText;
             return (
               <button
                 key={cat}
                 onClick={() => setActivePage('explore')}
-                className="bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 p-4 rounded-2xl transition-all text-center space-y-2 group cursor-pointer"
+                className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow-md transition-all text-left flex flex-col items-start gap-3 group cursor-pointer"
               >
-                <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-emerald-600 text-slate-700 group-hover:text-white flex items-center justify-center mx-auto transition-colors">
-                  <Icon className="w-5 h-5" />
+                <div className="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-950 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                  <IconComponent className="w-5 h-5" />
                 </div>
-                <span className="font-semibold text-xs text-slate-800 group-hover:text-emerald-900 block truncate">
+                <span className="font-semibold text-slate-900 dark:text-slate-100 text-xs group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                   {cat}
                 </span>
               </button>
