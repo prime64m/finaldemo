@@ -7,6 +7,7 @@ import ExploreSchemesPage from './pages/ExploreSchemesPage';
 import EligibleSchemesPage from './pages/EligibleSchemesPage';
 import SchemeDetailsPage from './pages/SchemeDetailsPage';
 import AboutPage from './pages/AboutPage';
+import AssistedHelpWidget from './components/AssistedHelpWidget';
 import { DEMO_PROFILES } from './data/demoProfiles';
 
 const LOCAL_STORAGE_KEY = 'schemesaathi_family_profile_v1';
@@ -63,7 +64,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-emerald-500 selection:text-white relative">
       
       {/* Navigation Bar */}
       <Navbar 
@@ -118,6 +119,12 @@ export default function App() {
           <AboutPage />
         )}
       </main>
+
+      {/* Beginner Friendly Floating Assistance Widget */}
+      <AssistedHelpWidget 
+        setActivePage={handlePageChange} 
+        loadDemoProfile={handleLoadDemoProfile} 
+      />
 
       {/* Footer */}
       <Footer setActivePage={handlePageChange} />
